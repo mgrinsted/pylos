@@ -11,14 +11,24 @@ type TenantCustomerService struct {
 	db *sqlx.DB
 }
 
+type EstateCustomerService struct {
+	db *sqlx.DB
+}
+
 func NewTenantCustomerService(db *sqlx.DB) *TenantCustomerService {
 	return &TenantCustomerService{
 		db: db,
 	}
 }
 
+func NewEstateCustomerService(db *sqlx.DB) *EstateCustomerService {
+	return &EstateCustomerService{
+		db: db,
+	}
+}
+
 // GetAll retrieves all customer names from the database.
-func (s *TenantCustomerService) GetAll() ([]models.EstateCustomer, error) {
+func (s *EstateCustomerService) GetAll() ([]models.EstateCustomer, error) {
 	var customers []models.EstateCustomer
 	err := s.db.Select(&customers, "SELECT * FROM tranquility_estate.customer")
 	if err != nil {

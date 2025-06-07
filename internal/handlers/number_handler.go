@@ -13,3 +13,13 @@ func NewTenantNumbersHandler(service *services.TenantNumbersService) *TenantNumb
 		service: service,
 	}
 }
+
+type EstateNumbersHandler struct {
+	service *services.EstateNumbersService
+}
+
+func NewEstateNumbersHandler(service *services.EstateNumbersService) *EstateNumbersHandler {
+	return &EstateNumbersHandler{
+		service: service,
+	}
+}

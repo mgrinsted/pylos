@@ -18,7 +18,7 @@ func SetupRoutes(h *handlers.Handlers) http.Handler {
 
 	r.Route("/customers", func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			customers, err := h.TenantCustomer.GetAll()
+			customers, err := h.EstateCustomer.GetAll()
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
