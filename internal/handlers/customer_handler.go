@@ -19,6 +19,7 @@ func NewTenantCustomerHandler(service *services.TenantCustomerService) *TenantCu
 		service: service,
 	}
 }
+
 // NewEstateCustomerHandler creates a new EstateCustomerHandler with the given service.
 func NewEstateCustomerHandler(service *services.EstateCustomerService) *EstateCustomerHandler {
 	return &EstateCustomerHandler{
@@ -28,7 +29,7 @@ func NewEstateCustomerHandler(service *services.EstateCustomerService) *EstateCu
 
 // GetAll retrieves all customer names from the database.
 
-func (h *EstateCustomerHandler) GetAll() ([]models.EstateCustomer, error) {
+func (h *EstateCustomerHandler) GetAll() ([]models.CustomerSummaryDTO, error) {
 	rows, err := h.service.GetAll()
 	if err != nil {
 		log.Printf("Error querying customers: %v", err)

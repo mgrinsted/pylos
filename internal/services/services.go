@@ -13,7 +13,7 @@ func SetupServices(db *sqlx.DB) *Services {
 	return &Services{
 		TenantCustomerService: NewTenantCustomerService(db),
 		TenantNumbersService:  NewTenantNumbersService(db),
-		EstateCustomerService: NewEstateCustomerService(db),
+		EstateCustomerService: NewEstateCustomerService(db, "tranquility_estate"),
 		EstateNumbersService:  NewEstateNumbersService(db),
 	}
 }

@@ -3,6 +3,8 @@ package services
 import (
 	"database/sql"
 
+	"github.com/mgrinsted/pylos/internal/utils/reflectutil"
+
 	"github.com/jmoiron/sqlx"
 	models "github.com/mgrinsted/pylos/internal/models/estate"
 )
@@ -12,7 +14,8 @@ type TenantCustomerService struct {
 }
 
 type EstateCustomerService struct {
-	db *sqlx.DB
+	db      *sqlx.DB
+	db_name string
 }
 
 func NewTenantCustomerService(db *sqlx.DB) *TenantCustomerService {
@@ -21,16 +24,22 @@ func NewTenantCustomerService(db *sqlx.DB) *TenantCustomerService {
 	}
 }
 
-func NewEstateCustomerService(db *sqlx.DB) *EstateCustomerService {
+func NewEstateCustomerService(db *sqlx.DB, db_name string) *EstateCustomerService {
 	return &EstateCustomerService{
-		db: db,
+		db:      db,
+		db_name: db_name,
 	}
 }
 
 // GetAll retrieves all customer names from the database.
-func (s *EstateCustomerService) GetAll() ([]models.EstateCustomer, error) {
-	var customers []models.EstateCustomer
-	err := s.db.Select(&customers, "SELECT * FROM tranquility_estate.customer")
+func (s *EstateCustomerService) GetAll() ([]models.CustomerSummaryDTO, error) {
+	var customers []models.CustomerSummaryDTO
+
+	columns := reflectutil.GetDBFields(models.CustomerSummaryDTO{})
+
+	query := "SELECT " + columns + " FROM tranquility_estate.customer"
+
+	err := s.db.Select(&customers, query)
 	if err != nil {
 		return nil, err
 	}
