@@ -3,6 +3,7 @@ package router
 import (
 	"html/template"
 	"net/http"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mgrinsted/pylos/internal/handlers"
@@ -48,7 +49,7 @@ func loadTemplates() *template.Template {
 			return s[start:end]
 		},
 		"upper": func(s string) string {
-			return string([]rune(s)[0] - 32)
+			return strings.ToUpper(s)
 		},
 		"default": func(defaultValue, value interface{}) interface{} {
 			if value == nil || value == "" {

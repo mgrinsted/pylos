@@ -1,6 +1,6 @@
 {{ define "partials/pagination" }}
 {{ if gt .Pagination.TotalPages 1 }}
-<diiv class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+<div class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
   <div class="-mt-px flex w-0 flex-1">
     {{ if gt .Pagination.Page 1 }}
     <a href="/customers?page={{ sub .Pagination.Page 1 }}&limit={{ .Pagination.PageSize }}"
