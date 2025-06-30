@@ -6,45 +6,72 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/mgrinsted/pylos/internal/handlers"
-	"github.com/mgrinsted/pylos/internal/web"
 )
 
 func SetupRoutes(h *handlers.Handlers) http.Handler {
 	r := chi.NewRouter()
 
-	templates := template.Must(template.ParseFiles(
-		"templates/layout.html",
-		"templates/sidebar.html",
-		"templates/topbar.html",
-		"templates/customers.html",
-	))
+	templates := loadTemplates()
 
-	// add an index page
+	// Home route redirects to customers
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
-		w.Write([]byte("Welcome to the Pylos API!"))
+		http.Redirect(w, r, "/customers", http.StatusFound)
 	})
 
-	// r.Route("/numbers", func(r chi.Router) {
-	// 	r.Get("/", h.Number.GetAll)
-	// 	r.Get("/{id}", h.Number.GetByID)
-	// })
-
-	// r.Route("/customers", func(r chi.Router) {
-	// 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 		customers, err := h.EstateCustomer.GetAll()
-	// 		if err != nil {
-	// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 			return
-	// 		}
-	// 		// Example: encode as JSON
-	// 		w.Header().Set("Content-Type", "application/json")
-	// 		json.NewEncoder(w).Encode(customers)
-	// 	})
-	// 	// r.Get("/{id}", h.TenantCustomer.GetByID)
-	// })
-
-	r.Get("/customers", web.CustomersPageHandler(h.EstateCustomer, templates))
+	// Customer routes
+	r.Get("/customers", h.EstateCustomer.CustomersPageHandler(templates))
+	// r.Get("/customers/{id}", h.EstateCustomer.CustomerDetailHandler(templates))
 
 	return r
+}
+
+func loadTemplates() *template.Template {
+	funcMap := template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
+		"mul": func(a, b int) int { return a * b },
+		"iter": func(count int) []int {
+			s := make([]int, count)
+			for i := 0; i < count; i++ {
+				s[i] = i
+			}
+			return s
+		},
+		"substr": func(s string, start, length int) string {
+			if start >= len(s) {
+				return ""
+			}
+			end := start + length
+			if end > len(s) {
+				end = len(s)
+			}
+			return s[start:end]
+		},
+		"upper": func(s string) string {
+			return string([]rune(s)[0] - 32)
+		},
+		"default": func(defaultValue, value interface{}) interface{} {
+			if value == nil || value == "" {
+				return defaultValue
+			}
+			return value
+		},
+		"eq": func(a, b interface{}) bool {
+			return a == b
+		},
+		"gt": func(a, b int) bool {
+			return a > b
+		},
+		"lt": func(a, b int) bool {
+			return a < b
+		},
+	}
+
+	tmpl := template.New("").Funcs(funcMap)
+
+	// Parse all templates
+	tmpl = template.Must(tmpl.ParseGlob("templates/*.html"))
+	tmpl = template.Must(tmpl.ParseGlob("templates/**/*.html"))
+
+	return tmpl
 }

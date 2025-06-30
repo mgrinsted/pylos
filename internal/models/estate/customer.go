@@ -37,11 +37,15 @@ type CustomerSummaryDTO struct {
 	ID            int     `json:"id" db:"id"`
 	Name          string  `json:"name" db:"name"`
 	AffiliateID   *string `json:"affiliate_id" db:"affiliate_id"`
+	AffiliateName *string `json:"affiliate_name" db:"affiliate_name"`
 	Namespace     *string `json:"namespace" db:"namespace"`
 	Status        *int    `json:"status" db:"status"`
 	Storage       *string `json:"storage" db:"storage"`
-	SFTP          *bool   `json:"sftp" db:"sftp"`
-	ActiveCount   int     `json:"active_msisdns" db:"active_msisdns"`
-	InactiveCount int     `json:"inactive_msisdns" db:"inactive_msisdns"`
-	TotalCount    int     `json:"total_msisdns" db:"total_msisdns"`
+	StatusLabel   string  `json:"-"`
+	StatusColor   string  `json:"-"`
+	StatusBadge   string  `json:"-"`
+	// SFTP          *bool   `json:"sftp" db:"sftp"`
+	// ActiveCount   int     `json:"active_msisdns" db:"active_msisdns"`
+	// InactiveCount int     `json:"inactive_msisdns" db:"inactive_msisdns"`
+	// TotalCount    int     `json:"total_msisdns" db:"total_msisdns"`
 }

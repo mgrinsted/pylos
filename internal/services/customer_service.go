@@ -1,60 +1,48 @@
 package services
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
 
-	"github.com/mgrinsted/pylos/internal/utils/reflectutil"
+	"github.com/mgrinsted/pylos/internal/repository"
 
-	"github.com/jmoiron/sqlx"
 	models "github.com/mgrinsted/pylos/internal/models/estate"
 )
 
-type TenantCustomerService struct {
-	db *sqlx.DB
-}
-
 type EstateCustomerService struct {
-	db      *sqlx.DB
-	db_name string
+	repo repository.EstateCustomerRepository
 }
 
-func NewTenantCustomerService(db *sqlx.DB) *TenantCustomerService {
-	return &TenantCustomerService{
-		db: db,
-	}
+func NewEstateCustomerService(repo repository.EstateCustomerRepository) *EstateCustomerService {
+	return &EstateCustomerService{repo: repo}
 }
 
-func NewEstateCustomerService(db *sqlx.DB, db_name string) *EstateCustomerService {
-	return &EstateCustomerService{
-		db:      db,
-		db_name: db_name,
-	}
-}
+// GetPaginated retrieves paginated customer summaries from the database.
+func (s *EstateCustomerService) GetPaginated(limit, offset int) ([]models.CustomerSummaryDTO, int, error) {
+	fmt.Printf("LIMIT: %d, OFFSET: %d\n", limit, offset)
+	ctx := context.Background()
 
-// GetAll retrieves all customer names from the database.
-func (s *EstateCustomerService) GetAll() ([]models.CustomerSummaryDTO, error) {
-	var customers []models.CustomerSummaryDTO
-
-	columns := reflectutil.GetDBFields(models.CustomerSummaryDTO{})
-
-	query := "SELECT " + columns + " FROM tranquility_estate.customer"
-
-	err := s.db.Select(&customers, query)
+	customers, err := s.repo.GetAllSummary(ctx, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
-	return customers, nil
+
+	total, err := s.repo.CountAll(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return customers, total, nil
 }
 
-// GetByID retrieves a customer by their ID.
-func (s *TenantCustomerService) GetByID(id int) (string, error) {
-	var name string
-	err := s.db.QueryRow("SELECT name FROM tranquility_estate.customer WHERE id = ?", id).Scan(&name)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return "", nil // No customer found with the given ID
-		}
-		return "", err
-	}
-	return name, nil
-}
+// GetByID retrieves a single customer by ID
+// func (s *EstateCustomerService) GetByID(id int) (*models.CustomerDetailDTO, error) {
+// 	ctx := context.Background()
+
+// 	customer, err := s.repo.GetByID(ctx, id)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return customer, nil
+// }

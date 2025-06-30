@@ -1,4 +1,4 @@
-package refectutil
+package reflectutil
 
 import (
 	"reflect"

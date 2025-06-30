@@ -1,19 +1,18 @@
 package services
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/jmoiron/sqlx"
+	"github.com/mgrinsted/pylos/internal/repository"
+)
 
 type Services struct {
-	TenantCustomerService *TenantCustomerService
-	TenantNumbersService  *TenantNumbersService
 	EstateCustomerService *EstateCustomerService
-	EstateNumbersService  *EstateNumbersService
 }
 
 func SetupServices(db *sqlx.DB) *Services {
+	estateCustomerRepo := repository.NewEstateCustomerRepository(db)
+	
 	return &Services{
-		TenantCustomerService: NewTenantCustomerService(db),
-		TenantNumbersService:  NewTenantNumbersService(db),
-		EstateCustomerService: NewEstateCustomerService(db, "tranquility_estate"),
-		EstateNumbersService:  NewEstateNumbersService(db),
+		EstateCustomerService: NewEstateCustomerService(estateCustomerRepo),
 	}
 }
