@@ -72,10 +72,15 @@ func (h *EstateCustomerHandler) CustomersPageHandler(templates *template.Templat
 		// Determine which template to execute
 		var templateName string
 		if r.Header.Get("HX-Request") == "true" {
-			// For HTMX requests, return just the content
-			templateName = "content"
+			switch r.Header.Get("HX-Target") {
+			case "customer-table-container":
+				templateName = "partials/table_container"
+			default:
+				// For HTMX requests targeting other elements, return the full content
+				templateName = "content"
+			}
 		} else {
-			// For full page requests, return the full customers page
+			// For full page requests, return the complete page
 			templateName = "customers"
 		}
 
