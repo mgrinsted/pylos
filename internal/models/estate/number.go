@@ -10,7 +10,7 @@ type EstateNumber struct {
 	Status     int    `json:"status"`
 	CreatedAt  string `json:"created_at"`
 
-	// Optionnal fields - these fields may not be present in all cases
+	// Optional fields - these fields may not be present in all cases
 	UpdatedAt string `json:"updated_at,omitempty"`
 	DeletedAt string `json:"deleted_at,omitempty"`
 }
