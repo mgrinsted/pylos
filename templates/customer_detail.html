@@ -1,0 +1,17 @@
+{{ define "content" }}
+    <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+            <h1 class="text-base font-semibold leading-6 text-gray-900">Customer</h1>
+            <p class="mt-2 text-sm text-gray-700">Customer Details.</p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
+                Edit customer
+            </button>
+        </div>
+    </div>
+{{ end }}
+
+{{ define "customer_detail" }}
+    {{ template "base" . }}
+{{ end }}

@@ -44,8 +44,20 @@ type CustomerSummaryDTO struct {
 	StatusLabel   string  `json:"-"`
 	StatusColor   string  `json:"-"`
 	StatusBadge   string  `json:"-"`
-	// SFTP          *bool   `json:"sftp" db:"sftp"`
-	// ActiveCount   int     `json:"active_msisdns" db:"active_msisdns"`
-	// InactiveCount int     `json:"inactive_msisdns" db:"inactive_msisdns"`
-	// TotalCount    int     `json:"total_msisdns" db:"total_msisdns"`
+}
+
+type CustomerDetailDTO struct {
+	ID            int        `json:"id" db:"id"`
+	Name          *string    `json:"name" db:"name"`
+	AffiliateID   *string    `json:"affiliate_id" db:"affiliate_id"`
+	AffiliateName *string    `json:"affiliate_name" db:"affiliate_name"`
+	Status        *int       `json:"status" db:"status"`
+	Created       *time.Time `json:"created" db:"created"`
+	Storage       *string    `json:"storage" db:"storage"`
+	SFTP          *int       `json:"sftp" db:"sftp"`
+	SupportEmail  *string    `json:"support_email" db:"supportEmail"`
+	SupportNumber *string    `json:"support_number" db:"supportNumber"`
+	StatusLabel   string     `json:"-"`
+	StatusColor   string     `json:"-"`
+	StatusBadge   string     `json:"-"`
 }

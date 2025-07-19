@@ -11,6 +11,8 @@ import (
 type EstateCustomerRepository interface {
 	GetAllSummary(ctx context.Context, limit, offset int) ([]models_estate.CustomerSummaryDTO, error)
 	CountAll(ctx context.Context) (int, error)
+	GetByID(ctx context.Context, id int) (*models_estate.CustomerDetailDTO, error)
+	// Add any other methods needed for customer operations
 }
 
 type estateCustomerRepository struct {
@@ -54,4 +56,45 @@ func (r *estateCustomerRepository) CountAll(ctx context.Context) (int, error) {
 	var count int
 	err := r.db.GetContext(ctx, &count, "SELECT COUNT(*) FROM tranquility_estate.customer")
 	return count, err
+}
+func (r *estateCustomerRepository) GetByID(ctx context.Context, id int) (*models_estate.CustomerDetailDTO, error) {
+	var customer models_estate.CustomerDetailDTO
+
+	/*
+		ID				int
+		Name           	*string
+		AffiliateID    	*string
+		Status         	*int
+		Created        	*time.Time
+		Storage        	*string
+		SFTP           	*int
+		SupportEmail   	*string
+		SupportNumber  	*string
+	*/
+
+	query := `
+		SELECT
+			c.id,
+			c.name,
+			c.affiliate_id,
+			a.name AS affiliate_name,
+			c.status,
+			c.storage,
+			c.created,
+			c.sftp,
+			c.supportEmail,
+			c.supportNumber
+		FROM tranquility_estate.customer c
+		LEFT JOIN tranquility_estate.affiliates a ON c.affiliate_id = a.id
+		WHERE c.id = ?
+	`
+
+	err := r.db.GetContext(ctx, &customer, query, id)
+	if err != nil {
+		return nil, err
+	}
+
+	customer.StatusLabel, customer.StatusColor, customer.StatusBadge = models.MapStatus(customer.Status)
+
+	return &customer, nil
 }

@@ -16,12 +16,12 @@ func SetupRoutes(h *handlers.Handlers) http.Handler {
 
 	// Home route redirects to customers
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, "/customers", http.StatusFound)
+		http.Redirect(w, r, "/customers/1021", http.StatusFound)
 	})
 
 	// Customer routes
+	r.Get("/customers/{id}", h.EstateCustomer.CustomerDetailHandler(templates))
 	r.Get("/customers", h.EstateCustomer.CustomersPageHandler(templates))
-	// r.Get("/customers/{id}", h.EstateCustomer.CustomerDetailHandler(templates))
 
 	return r
 }

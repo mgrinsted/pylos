@@ -9,7 +9,7 @@
         <p class="mt-2 text-sm text-gray-700">A list of all customers in the system.</p>
     </div>
     <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-        <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <button type="button" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">
             Add customer
         </button>
     </div>
@@ -17,16 +17,15 @@
 
 {{ template "partials/table_container" . }}
 
-<!-- Page size selector -->
 <div class="flex justify-end items-center mt-4">
     <form method="get" class="flex items-center space-x-2">
         <label for="limit" class="text-sm text-gray-700">Show:</label>
         <select name="limit" id="limit" 
                 hx-get="/customers" 
-                hx-target="#main-content" 
+                hx-target="#customer-table-container"
                 hx-swap="innerHTML"
                 hx-include="[name='page']"
-                class="text-sm rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                class="text-sm rounded-md border-gray-300 shadow-sm">
             <option value="10" {{ if eq .Pagination.PageSize 10 }}selected{{ end }}>10</option>
             <option value="25" {{ if eq .Pagination.PageSize 25 }}selected{{ end }}>25</option>
             <option value="50" {{ if eq .Pagination.PageSize 50 }}selected{{ end }}>50</option>

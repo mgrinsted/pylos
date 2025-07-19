@@ -36,13 +36,13 @@ func (s *EstateCustomerService) GetPaginated(limit, offset int) ([]models.Custom
 }
 
 // GetByID retrieves a single customer by ID
-// func (s *EstateCustomerService) GetByID(id int) (*models.CustomerDetailDTO, error) {
-// 	ctx := context.Background()
+func (s *EstateCustomerService) GetByID(id int) (*models.CustomerDetailDTO, error) {
+	ctx := context.Background()
 
-// 	customer, err := s.repo.GetByID(ctx, id)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	customer, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
 
-// 	return customer, nil
-// }
+	return customer, nil
+}

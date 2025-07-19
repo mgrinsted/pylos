@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/mgrinsted/pylos/internal/services"
 )
 
@@ -85,6 +86,39 @@ func (h *EstateCustomerHandler) CustomersPageHandler(templates *template.Templat
 		}
 
 		if err := templates.ExecuteTemplate(w, templateName, data); err != nil {
+			log.Printf("Template execution error: %v", err)
+			return
+		}
+	}
+}
+
+// CustomerDetailHandler returns an HTTP handler that renders the customer detail page
+func (h *EstateCustomerHandler) CustomerDetailHandler(templates *template.Template) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+	log.Printf("CustomerDetailHandler called")
+
+		// Get the customer ID from the URL
+		idStr := chi.URLParam(r, "id")
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			http.Error(w, "Invalid customer ID", http.StatusBadRequest)
+			return
+		}
+
+		customer, err := h.service.GetByID(id)
+		if err != nil {
+			http.Error(w, "Unable to load customer", http.StatusInternalServerError)
+			log.Printf("Customer query failed: %v", err)
+			return
+		}
+
+		data := map[string]interface{}{
+			"Title":       "Customer Detail - Admin Portal",
+			"CurrentPage": "customers",
+			"Customer":    customer,
+		}
+
+		if err := templates.ExecuteTemplate(w, "customer_detail", data); err != nil {
 			log.Printf("Template execution error: %v", err)
 			return
 		}
